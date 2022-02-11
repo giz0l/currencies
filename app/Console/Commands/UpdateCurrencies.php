@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\NBP;
+use App\Models\Currency;
+use DB;
 
 class UpdateCurrencies extends Command
 {
@@ -39,8 +41,28 @@ class UpdateCurrencies extends Command
     public function handle()
     {
         $nbp = new NBP();
-        $table = $nbp->getCurrency("A");
-        
-        dd($table);
+        $table = $nbp->getCurrency("B");
+
+        foreach($table->rates as $rate){
+            try {
+                DB::beginTransaction();
+
+                $currency = Currency::updateOrCreate(
+                    [
+                        'currency_code'   => $rate->code,
+                    ],
+                    [
+                        'name' => $rate->currency,
+                        'currency_code' => $rate->code,
+                        'exchange_rate' =>  (int) round((1/$rate->mid)*100)
+                    ]
+                );
+
+                DB::commit();
+            } catch (\Exception $exception) {
+                DB::rollBack();
+                dd($exception);
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ class NBP
         if ($response->getStatusCode() == 200)
         {
             $content = json_decode($response->getBody());
-            return $content;
+            return $content[0];
         }
     }
 }
