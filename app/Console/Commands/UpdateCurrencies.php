@@ -41,7 +41,7 @@ class UpdateCurrencies extends Command
     public function handle()
     {
         $nbp = new NBP();
-        $table = $nbp->getCurrency("B");
+        $table = $nbp->getCurrencies("A");
 
         foreach($table->rates as $rate){
             try {
@@ -49,12 +49,12 @@ class UpdateCurrencies extends Command
 
                 $currency = Currency::updateOrCreate(
                     [
-                        'currency_code'   => $rate->code,
+                        'currency_code' => $rate->code,
                     ],
                     [
                         'name' => $rate->currency,
                         'currency_code' => $rate->code,
-                        'exchange_rate' =>  (int) round((1/$rate->mid)*100)
+                        'exchange_rate' => (int) round((1/$rate->mid)*100)
                     ]
                 );
 

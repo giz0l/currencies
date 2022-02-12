@@ -14,5 +14,4 @@ class Currency extends Model
         'currency_code',
         'exchange_rate',
     ];
-
 }
